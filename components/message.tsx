@@ -20,6 +20,19 @@ import { DocumentPreview } from './document-preview';
 import { MessageReasoning } from './message-reasoning';
 import { UseChatHelpers } from '@ai-sdk/react';
 
+// 过滤图片识别内容，只显示用户原始输入
+function filterRecognitionContent(text: string): string {
+  // 识别内容通过 [图片内容识别]: 标记附加到消息中
+  // 使用分隔符拆分，只保留用户原始输入部分
+  const separator = '[图片内容识别]:';
+  const parts = text.split(separator);
+  
+  // 只返回第一部分（用户输入）
+  const userInput = parts[0].trim();
+  
+  return userInput || '回答';
+}
+
 const PurePreviewMessage = ({
   chatId,
   message,
@@ -123,7 +136,7 @@ const PurePreviewMessage = ({
                             message.role === 'user',
                         })}
                       >
-                        <Markdown>{part.text}</Markdown>
+                        <Markdown>{message.role === 'user' ? filterRecognitionContent(part.text) : part.text}</Markdown>
                       </div>
                     </div>
                   );
