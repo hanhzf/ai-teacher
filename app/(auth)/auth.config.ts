@@ -33,7 +33,8 @@ export const authConfig = {
         return Response.redirect(new URL('/', nextUrl as unknown as URL));
       }
 
-      return true;
+      // 其他情况：未登录且不是登录/注册页面，要求登录
+      return false;
     },
   },
 } satisfies NextAuthConfig;

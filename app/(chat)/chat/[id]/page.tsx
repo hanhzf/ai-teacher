@@ -20,11 +20,12 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
 
   const session = await auth();
 
-  if (chat.visibility === 'private') {
-    if (!session || !session.user) {
-      return notFound();
-    }
+  // 禁用匿名访问：要求所有用户必须登录
+  if (!session || !session.user) {
+    return notFound();
+  }
 
+  if (chat.visibility === 'private') {
     if (session.user.id !== chat.userId) {
       return notFound();
     }
