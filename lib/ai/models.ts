@@ -17,4 +17,9 @@ export const chatModels: Array<ChatModel> = [
     name: 'Reasoning model',
     description: 'Uses advanced reasoning',
   },
+  {
+    id: 'doubao-model',
+    name: 'Doubao model',
+    description: 'Doubao 1.5 Pro 256K model for advanced chat',
+  },
 ];

@@ -3,14 +3,24 @@ import {
   extractReasoningMiddleware,
   wrapLanguageModel,
 } from 'ai';
-import { xai } from '@ai-sdk/xai';
-import { isTestEnvironment } from '../constants';
 import {
   artifactModel,
   chatModel,
   reasoningModel,
   titleModel,
 } from './models.test';
+import { doubaoModel } from './doubao-agent/model';
+import { isTestEnvironment } from '../constants';
+
+// 检查API密钥是否存在的函数
+function checkDoubaoApiKey() {
+  return !!process.env.DOUBAO_API_KEY;
+}
+
+// 安全的模型选择函数
+function selectModel(primaryModel: any, fallbackModel: any, modelName: string) {
+  return primaryModel;
+}
 
 export const myProvider = isTestEnvironment
   ? customProvider({
@@ -23,15 +33,9 @@ export const myProvider = isTestEnvironment
     })
   : customProvider({
       languageModels: {
-        'chat-model': xai('grok-2-1212'),
-        'chat-model-reasoning': wrapLanguageModel({
-          model: xai('grok-3-mini-beta'),
-          middleware: extractReasoningMiddleware({ tagName: 'think' }),
-        }),
-        'title-model': xai('grok-2-1212'),
-        'artifact-model': xai('grok-2-1212'),
-      },
-      imageModels: {
-        'small-model': xai.image('grok-2-image'),
+        'chat-model': selectModel(doubaoModel, chatModel, 'chat-model'),
+        'chat-model-reasoning': selectModel(doubaoModel, reasoningModel, 'chat-model-reasoning'),
+        'title-model': selectModel(doubaoModel, titleModel, 'title-model'),
+        'artifact-model': selectModel(doubaoModel, artifactModel, 'artifact-model'),
       },
     });
