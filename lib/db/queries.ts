@@ -28,6 +28,7 @@ import {
 } from './schema';
 import type { ArtifactKind } from '@/components/artifact';
 import { generateHashedPassword } from './utils';
+import { convertLatexFormulas } from '@/lib/utils/latex-formula-converter';
 
 // Optionally, if not using email/pass login, you can
 // use the Drizzle adapter for Auth.js / NextAuth
@@ -179,7 +180,26 @@ export async function saveMessages({
   messages: Array<DBMessage>;
 }) {
   try {
-    return await db.insert(message).values(messages);
+    // 在保存到数据库之前转换 LaTeX 公式标记
+    const convertedMessages = messages.map(msg => {
+      if (msg.parts && Array.isArray(msg.parts)) {
+        return {
+          ...msg,
+          parts: msg.parts.map(part => {
+            if (part && part.text) {
+              return {
+                ...part,
+                text: convertLatexFormulas(part.text)
+              };
+            }
+            return part;
+          })
+        };
+      }
+      return msg;
+    });
+
+    return await db.insert(message).values(convertedMessages);
   } catch (error) {
     console.error('Failed to save messages in database', error);
     throw error;
