@@ -1,4 +1,5 @@
 import { LanguageModelV1, LanguageModelV1CallOptions, LanguageModelV1Prompt, LanguageModelV1StreamPart } from "ai";
+import { DOUBAO_MODEL_ID } from './constants';
 
 // Doubao 模型实现 - 纯文本处理，但包含图片识别内容
 function convertPromptToMessages(prompt: LanguageModelV1Prompt): Array<{role: string, content: string}> {
@@ -26,7 +27,7 @@ function convertPromptToMessages(prompt: LanguageModelV1Prompt): Array<{role: st
 export const doubaoModel: LanguageModelV1 = {
   specificationVersion: 'v1',
   provider: 'doubao',
-  modelId: 'doubao-1-5-pro-256k-250115',
+  modelId: DOUBAO_MODEL_ID,
   defaultObjectGenerationMode: 'json',
 
   async doGenerate(options: LanguageModelV1CallOptions) {
@@ -41,7 +42,7 @@ export const doubaoModel: LanguageModelV1 = {
     // console.log('Doubao 转换后的消息:', JSON.stringify(messages, null, 2));
 
     const baseUrl = process.env.DOUBAO_BASE_URL || 'https://ark.cn-beijing.volces.com/api/v3';
-    const apiKey = process.env.DOUBAO_API_KEY || 'ade655b0-cce1-4d70-9863-89b03adac124';
+    const apiKey = process.env.DOUBAO_API_KEY;
     
     try {
       const response = await fetch(baseUrl + '/chat/completions', {
@@ -51,7 +52,7 @@ export const doubaoModel: LanguageModelV1 = {
           'Authorization': 'Bearer ' + apiKey
         },
         body: JSON.stringify({
-          model: 'doubao-1-5-pro-256k-250115',
+          model: DOUBAO_MODEL_ID,
           messages: messages,
           stream: false
         })
@@ -76,7 +77,7 @@ export const doubaoModel: LanguageModelV1 = {
         },
         request: {
           body: JSON.stringify({
-            model: 'doubao-1-5-pro-256k-250115',
+            model: DOUBAO_MODEL_ID,
             messages: messages,
             stream: false
           }),
@@ -106,7 +107,7 @@ export const doubaoModel: LanguageModelV1 = {
     // console.log('Doubao Stream 转换后的消息:', JSON.stringify(messages, null, 2));
 
     const baseUrl = process.env.DOUBAO_BASE_URL || 'https://ark.cn-beijing.volces.com/api/v3';
-    const apiKey = process.env.DOUBAO_API_KEY || 'ade655b0-cce1-4d70-9863-89b03adac124';
+    const apiKey = process.env.DOUBAO_API_KEY;
 
     const stream = new ReadableStream<LanguageModelV1StreamPart>({
       async start(controller) {
@@ -118,7 +119,7 @@ export const doubaoModel: LanguageModelV1 = {
               'Authorization': 'Bearer ' + apiKey
             },
             body: JSON.stringify({
-              model: 'doubao-1-5-pro-256k-250115',
+              model: DOUBAO_MODEL_ID,
               messages: messages,
               stream: true
             })
@@ -191,7 +192,7 @@ export const doubaoModel: LanguageModelV1 = {
       },
       request: {
         body: JSON.stringify({
-          model: 'doubao-1-5-pro-256k-250115',
+          model: DOUBAO_MODEL_ID,
           messages: messages,
           stream: true
         }),
