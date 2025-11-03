@@ -96,9 +96,10 @@ const components: Partial<Components> = {
 };
 
 // 添加数学公式支持
-// remarkMath 默认支持 \(...\) 和 $...$ 作为行内公式
-// 默认支持 \[...\] 和 $$...$$ 作为块级公式
-const remarkPlugins = [remarkGfm, remarkMath];
+// 将 remarkMath 放在 remarkGfm 之前，避免 GFM 先行处理反斜杠转义，
+// 导致 \(...\) 与 \[...\] 语法无法被正确识别。
+// remarkMath 支持行内：\(...\) / $...$，块级：\[...\] / $$...$$
+const remarkPlugins = [remarkMath, remarkGfm];
 const rehypePlugins = [rehypeKatex];
 
 const NonMemoizedMarkdown = ({ children }: { children: string }) => {
