@@ -4,6 +4,40 @@ import OSS from 'ali-oss';
 
 import { auth } from '@/app/(auth)/auth';
 
+const vision_prompt = `
+请对图片进行全量题目信息识别，严格遵循以下规范：
+
+**识别范围（必须完整提取）**：
+1. 题型标识
+2. 完整题干内容
+3. 所有已知条件（数值、关系、约束）
+4. 明确的问题要求
+5. 图形相关描述（坐标系、几何图形、标注信息）
+6. 选项内容（若为选择题）
+7. 附加说明或备注
+
+**数学公式识别和LaTeX格式输出规范**：
+- 如果返回值中包含 LaTeX 数学公式，请确保公式正确渲染，使用以下格式：
+- 行内公式：用单个美元符$ 包裹公式，如 $x^2 + y^2 = r^2$。
+- 块级公式：用两个美元符 $$ 包裹公式，如：$$公式内容$$
+
+**格式输出要求**：
+- 使用标准 Markdown 语法
+- 公式必须符合 LaTeX 标准，可被 KaTeX 正确渲染
+- 保留原题的逻辑结构和层次
+- 对图形进行文字化清晰描述
+
+**质量标准**：
+- 信息完整性：100%提取，零遗漏
+- 公式准确性：符号、上下标、分式结构完全正确
+- 格式规范性：可直接用于后续处理或展示
+
+**重要约束**：
+仅识别题目原文，不做解题分析或答案推导。
+
+请按以上标准输出完整的题目内容。
+`;  
+
 // 豆包视觉模型识别图片内容
 async function recognizeImageWithDoubao(imageUrl: string): Promise<string> {
   const baseUrl = process.env.DOUBAO_BASE_URL || 'https://ark.cn-beijing.volces.com/api/v3';
@@ -17,14 +51,23 @@ async function recognizeImageWithDoubao(imageUrl: string): Promise<string> {
         'Authorization': 'Bearer ' + apiKey
       },
       body: JSON.stringify({
-        model: 'doubao-1.5-vision-pro-250328', // 使用支持视觉的模型
+        model: 'doubao-seed-1-6-vision-250815', // 使用支持视觉的模型
         messages: [
+          {
+            role: "system",
+            content: [
+                {
+                    "type": "text",
+                    "text": vision_prompt
+                }
+            ]
+          },
           {
             role: 'user',
             content: [
               {
                 type: 'text',
-                text: '请识别这张图片中的内容，包括文字、物体、场景等，尽可能详细地描述。'
+                text: "请提取图片中的题目信息"
               },
               {
                 type: 'image_url',
@@ -33,7 +76,8 @@ async function recognizeImageWithDoubao(imageUrl: string): Promise<string> {
             ]
           }
         ],
-        max_tokens: 2048,
+        thinking: { type: "disabled" }, 
+        max_tokens: 32768,
         temperature: 0.3,
         stream: false
       })
