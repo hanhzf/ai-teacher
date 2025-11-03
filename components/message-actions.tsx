@@ -60,7 +60,7 @@ export function PureMessageActions({
               <CopyIcon />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Copy</TooltipContent>
+          <TooltipContent>复制</TooltipContent>
         </Tooltip>
 
         <Tooltip>
@@ -106,14 +106,14 @@ export function PureMessageActions({
 
                     return 'Upvoted Response!';
                   },
-                  error: 'Failed to upvote response.',
+                  error: '点赞失败.',
                 });
               }}
             >
               <ThumbUpIcon />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Upvote Response</TooltipContent>
+          <TooltipContent>点赞</TooltipContent>
         </Tooltip>
 
         <Tooltip>
@@ -159,14 +159,14 @@ export function PureMessageActions({
 
                     return 'Downvoted Response!';
                   },
-                  error: 'Failed to downvote response.',
+                  error: '点踩失败.',
                 });
               }}
             >
               <ThumbDownIcon />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Downvote Response</TooltipContent>
+          <TooltipContent>踩踩</TooltipContent>
         </Tooltip>
       </div>
     </TooltipProvider>
