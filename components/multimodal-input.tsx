@@ -153,6 +153,7 @@ function PureMultimodalInput({
     setAttachments([]);
     setRecognizedTexts([]);
     setLocalStorageInput('');
+    setInput(''); // 清除输入框内容
     resetHeight();
 
     if (width && width > 768) {

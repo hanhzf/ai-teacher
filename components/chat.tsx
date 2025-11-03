@@ -52,7 +52,7 @@ export function Chat({
       mutate(unstable_serialize(getChatHistoryPaginationKey));
     },
     onError: () => {
-      toast.error('An error occurred, please try again!');
+      toast.error('发生了一个错误，请重试!');
     },
   });
 
