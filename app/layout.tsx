@@ -8,7 +8,7 @@ import 'katex/dist/katex.min.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://chat.vercel.ai'),
-  title: 'Next.js Chatbot Template',
+  title: '学习助手',
   description: 'Next.js chatbot template using the AI SDK.',
 };
 
