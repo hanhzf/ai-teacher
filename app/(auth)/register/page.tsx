@@ -63,7 +63,7 @@ export default function Page() {
               href="/login"
               className="font-semibold text-gray-800 hover:underline dark:text-zinc-200"
             >
-              Sign in
+              登录
             </Link>
             {' instead.'}
           </p>
