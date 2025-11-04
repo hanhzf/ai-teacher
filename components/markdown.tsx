@@ -96,36 +96,20 @@ const components: Partial<Components> = {
 };
 
 // 添加数学公式支持
-// 将 remarkMath 放在 remarkGfm 之前,避免 GFM 先行处理反斜杠转义,
+// 将 remarkMath 放在 remarkGfm 之前，避免 GFM 先行处理反斜杠转义，
 // 导致 \(...\) 与 \[...\] 语法无法被正确识别。
-// remarkMath 支持行内:\(...\) / $...$,块级:\[...\] / $$...$$
+// remarkMath 支持行内：\(...\) / $...$，块级：\[...\] / $$...$$
 const remarkPlugins = [remarkMath, remarkGfm];
 const rehypePlugins = [rehypeKatex];
 
-// 预处理函数:将旧格式的 LaTeX 公式转换为新格式
-// 这样可以确保在流式传输过程中也能正确渲染
-const preprocessLatex = (content: string): string => {
-  // 将 \( ... \) 转换为 $ ... $
-  content = content.replace(/\\\((.+?)\\\)/g, '$$$1$$');
-  
-  // 将 \[ ... \] 转换为 $$ ... $$
-  // 使用 's' 标志使 . 匹配换行符,支持多行公式
-  content = content.replace(/\\\[([\s\S]+?)\\\]/g, '$$$$$$1$$$$');
-  
-  return content;
-};
-
 const NonMemoizedMarkdown = ({ children }: { children: string }) => {
-  // 预处理内容,将旧格式转换为新格式
-  const processedContent = preprocessLatex(children);
-  
   return (
     <ReactMarkdown
       remarkPlugins={remarkPlugins}
       rehypePlugins={rehypePlugins}
       components={components}
     >
-      {processedContent}
+      {children}
     </ReactMarkdown>
   );
 };
