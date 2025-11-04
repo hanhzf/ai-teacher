@@ -33,6 +33,19 @@ const vision_prompt = `
 请按以上标准输出完整的题目内容。
 `;  
 
+
+// 预处理函数:将旧格式的 LaTeX 公式转换为新格式
+// 这样可以确保在流式传输过程中也能正确渲染
+const preprocessLatex = (content: string): string => {
+  // 将 \( ... \) 转换为 $ ... $
+  content = content.replace(/\\\((.+?)\\\)/g, '$$$1$$');  
+  // 将 \[ ... \] 转换为 $$ ... $$
+  // 使用 's' 标志使 . 匹配换行符,支持多行公式
+  content = content.replace(/\\\[([\s\S]+?)\\\]/g, '$$$$$$1$$$$');
+  return content;
+};
+
+
 // 豆包视觉模型识别图片内容
 async function recognizeImageWithDoubao(imageUrl: string): Promise<string> {
   const baseUrl = process.env.DOUBAO_BASE_URL || 'https://ark.cn-beijing.volces.com/api/v3';
@@ -85,7 +98,17 @@ async function recognizeImageWithDoubao(imageUrl: string): Promise<string> {
     }
 
     const data = await response.json();
-    return data.choices?.[0]?.message?.content || '未能识别图片内容';
+
+    let content = data.choices?.[0]?.message?.content || '未能识别图片内容';
+    console.log('----- before doubao -----')
+    console.log(content)
+    console.log('----- end doubao -----')
+
+    content = preprocessLatex(content);
+    console.log('----- start preprocess -----')
+    console.log(content)
+    console.log('----- end preprocess -----')
+    return content || '未能识别图片内容';
   } catch (error) {
     console.error('图片识别错误:', error);
     return '图片识别失败';
