@@ -18,7 +18,9 @@ const vision_prompt = `
 
 **格式输出要求**：
 - 使用标准 Markdown 语法
-- 如果回复中包含数学公式，请使用LaTeX格式输出
+- 如果回复中包含数学公式，请使用aTeX 数学公式的 dollar 符号格式输出
+  - 行内公式(inline math): $...$ 
+  - 独立行公式(display math): $$...$$ 
 - 保留原题的逻辑结构和层次
 - 对图形进行文字化清晰描述
 
