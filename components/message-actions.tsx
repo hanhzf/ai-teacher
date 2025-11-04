@@ -54,7 +54,7 @@ export function PureMessageActions({
                 }
 
                 await copyToClipboard(textFromParts);
-                toast.success('Copied to clipboard!');
+                toast.success('内容已拷贝！');
               }}
             >
               <CopyIcon />
