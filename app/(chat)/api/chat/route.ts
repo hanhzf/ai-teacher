@@ -25,6 +25,7 @@ import { requestSuggestions } from '@/lib/ai/tools/request-suggestions';
 import { getWeather } from '@/lib/ai/tools/get-weather';
 import { isProductionEnvironment } from '@/lib/constants';
 import { myProvider } from '@/lib/ai/providers';
+import { createLatexFormulaTransformer } from '@/lib/utils/stream-latex-transformer';
 
 export const maxDuration = 60;
 
@@ -95,7 +96,10 @@ export async function POST(request: Request) {
                   'updateDocument',
                   'requestSuggestions',
                 ],
-          experimental_transform: smoothStream({ chunking: 'word' }),
+          experimental_transform: [
+            smoothStream({ chunking: 'word' }),
+            createLatexFormulaTransformer()
+          ],
           experimental_generateMessageId: generateUUID,
           tools: {
             getWeather,
