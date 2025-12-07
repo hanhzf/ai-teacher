@@ -44,22 +44,45 @@ export const doubaoModel: LanguageModelV1 = {
     const baseUrl = process.env.DOUBAO_BASE_URL || 'https://ark.cn-beijing.volces.com/api/v3';
     const apiKey = process.env.DOUBAO_API_KEY;
     
+    if (!apiKey) {
+      throw new Error('DOUBAO_API_KEY 环境变量未设置。请在 .env 文件中设置 DOUBAO_API_KEY。');
+    }
+    
     try {
+      const requestBody = {
+        model: DOUBAO_MODEL_ID,
+        messages: messages,
+        stream: false
+      };
+      
       const response = await fetch(baseUrl + '/chat/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + apiKey
         },
-        body: JSON.stringify({
-          model: DOUBAO_MODEL_ID,
-          messages: messages,
-          stream: false
-        })
+        body: JSON.stringify(requestBody)
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorText = await response.text();
+        let errorMessage = `HTTP error! status: ${response.status}`;
+        
+        try {
+          const errorJson = JSON.parse(errorText);
+          errorMessage += ` - ${errorJson.error?.message || errorText}`;
+        } catch {
+          errorMessage += ` - ${errorText}`;
+        }
+        
+        console.error('Doubao API 请求失败:', {
+          url: baseUrl + '/chat/completions',
+          status: response.status,
+          model: DOUBAO_MODEL_ID,
+          error: errorText
+        });
+        
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();
@@ -109,26 +132,47 @@ export const doubaoModel: LanguageModelV1 = {
     const baseUrl = process.env.DOUBAO_BASE_URL || 'https://ark.cn-beijing.volces.com/api/v3';
     const apiKey = process.env.DOUBAO_API_KEY;
 
+    if (!apiKey) {
+      throw new Error('DOUBAO_API_KEY 环境变量未设置。请在 .env 文件中设置 DOUBAO_API_KEY。');
+    }
+
     const stream = new ReadableStream<LanguageModelV1StreamPart>({
       async start(controller) {
         try {
+          const requestBody = {
+            model: DOUBAO_MODEL_ID,
+            messages: messages,
+            stream: true
+          };
+          
           const response = await fetch(baseUrl + '/chat/completions', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer ' + apiKey
             },
-            body: JSON.stringify({
-              model: DOUBAO_MODEL_ID,
-              messages: messages,
-              stream: true
-            })
+            body: JSON.stringify(requestBody)
           });
 
           if (!response.ok) {
             const errorText = await response.text();
-            console.error('Doubao API error response:', errorText);
-            throw new Error(`HTTP error! status: ${response.status}, response: ${errorText}`);
+            let errorMessage = `HTTP error! status: ${response.status}`;
+            
+            try {
+              const errorJson = JSON.parse(errorText);
+              errorMessage += ` - ${errorJson.error?.message || errorText}`;
+            } catch {
+              errorMessage += ` - ${errorText}`;
+            }
+            
+            console.error('Doubao API Stream 请求失败:', {
+              url: baseUrl + '/chat/completions',
+              status: response.status,
+              model: DOUBAO_MODEL_ID,
+              error: errorText
+            });
+            
+            throw new Error(errorMessage);
           }
 
           const reader = response.body?.getReader();
