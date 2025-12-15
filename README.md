@@ -60,3 +60,39 @@ pnpm dev
 ```
 
 Your app template should now be running on [localhost:3000](http://localhost:3000).
+
+## Deployment & Stability
+
+### Using PM2 (Process Manager)
+To prevent the application from closing (e.g., getting "Killed" due to memory issues), we use PM2.
+
+```bash
+# 1. Build the project
+pnpm build
+
+# 2. Start with PM2
+pnpm start:pm2
+
+# 3. Check status
+npx pm2 list
+npx pm2 logs
+
+# 4. Stop service
+npx pm2 stop ai-teacher
+npx pm2 delete ai-teacher
+```
+
+### Server Process "Killed" (OOM Fix)
+If you see a `Killed` message, your server is running out of memory. This is common on small VPS instances.
+**Fix: Add Swap Space**
+Run these commands on your server (Ubuntu/Debian):
+
+```bash
+# Create a 2GB swap file
+sudo fallocate -l 2G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+sudo cp /etc/fstab /etc/fstab.bak
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+```
