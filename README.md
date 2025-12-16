@@ -80,6 +80,12 @@ npx pm2 logs
 # 4. Stop service
 npx pm2 stop ai-teacher
 npx pm2 delete ai-teacher
+
+# 5. Make PM2 auto-start on server reboot (Important)
+# This generates a systemd service to resurrect PM2 and your apps on startup.
+npx pm2 save
+npx pm2 startup
+# Follow the command output to enable the system service (it will give you a command to run like 'sudo env PATH=... pm2 startup systemd -u ...')
 ```
 
 ### Server Process "Killed" (OOM Fix)
