@@ -22,4 +22,9 @@ export const chatModels: Array<ChatModel> = [
     name: '豆包模型',
     description: '豆包1.5 Pro 256K模型，用于高级聊天',
   },
+  {
+    id: 'qwen-model',
+    name: '千问模型',
+    description: '通义千问 Qwen-Plus 模型',
+  },
 ];

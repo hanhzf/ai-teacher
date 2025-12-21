@@ -10,6 +10,7 @@ import {
   titleModel,
 } from './models.test';
 import { doubaoModel } from './doubao-agent/model';
+import { qwenModel } from './qwen-agent/model';
 import { isTestEnvironment } from '../constants';
 
 // 检查API密钥是否存在的函数
@@ -17,9 +18,19 @@ function checkDoubaoApiKey() {
   return !!process.env.DOUBAO_API_KEY;
 }
 
+function checkQwenApiKey() {
+  return !!process.env.QWEN_API_KEY;
+}
+
 // 安全的模型选择函数
 function selectModel(primaryModel: any, fallbackModel: any, modelName: string) {
-  return primaryModel;
+  if (checkQwenApiKey()) {
+    return qwenModel;
+  }
+  if (checkDoubaoApiKey()) {
+    return doubaoModel;
+  }
+  return fallbackModel;
 }
 
 export const myProvider = isTestEnvironment
@@ -33,9 +44,9 @@ export const myProvider = isTestEnvironment
     })
   : customProvider({
       languageModels: {
-        'chat-model': selectModel(doubaoModel, chatModel, 'chat-model'),
-        'chat-model-reasoning': selectModel(doubaoModel, reasoningModel, 'chat-model-reasoning'),
-        'title-model': selectModel(doubaoModel, titleModel, 'title-model'),
-        'artifact-model': selectModel(doubaoModel, artifactModel, 'artifact-model'),
+        'chat-model': selectModel(qwenModel, doubaoModel, 'chat-model'),
+        'chat-model-reasoning': selectModel(qwenModel, doubaoModel, 'chat-model-reasoning'),
+        'title-model': selectModel(qwenModel, doubaoModel, 'title-model'),
+        'artifact-model': selectModel(qwenModel, doubaoModel, 'artifact-model'),
       },
     });

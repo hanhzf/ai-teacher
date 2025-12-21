@@ -64,6 +64,7 @@ Your app template should now be running on [localhost:3000](http://localhost:300
 ## Deployment & Stability
 
 ### Using PM2 (Process Manager)
+
 To prevent the application from closing (e.g., getting "Killed" due to memory issues), we use PM2.
 
 ```bash
@@ -73,9 +74,17 @@ pnpm build
 # 2. Start with PM2
 pnpm start:pm2
 
-# 3. Check status
+# 3. Check status & View Logs
 npx pm2 list
+
+# View all logs
 npx pm2 logs
+
+# View specific app logs with history
+npx pm2 logs ai-teacher --lines 100
+
+# Tip: Filter Qwen related logs
+# npx pm2 logs ai-teacher | grep "\[Qwen\]"
 
 # 4. Stop service
 npx pm2 stop ai-teacher
@@ -89,6 +98,7 @@ npx pm2 startup
 ```
 
 ### Server Process "Killed" (OOM Fix)
+
 If you see a `Killed` message, your server is running out of memory. This is common on small VPS instances.
 **Fix: Add Swap Space**
 Run these commands on your server (Ubuntu/Debian):
