@@ -19,8 +19,7 @@ async function testConnection() {
       inputFormat: 'messages',
       mode: { type: 'regular' },
       prompt: testPrompt as any,
-      settings: { temperature: 0.7 }
-    });
+    } as any);
     
     console.log('\n--- doGenerate Result ---');
     console.log('Response Text:', result.text);
@@ -40,8 +39,7 @@ async function testConnection() {
       inputFormat: 'messages',
       mode: { type: 'regular' },
       prompt: testPrompt as any,
-      settings: { temperature: 0.7 }
-    });
+    } as any);
 
     console.log('\n--- doStream Started ---');
     const reader = streamResult.stream.getReader();

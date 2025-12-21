@@ -1,5 +1,4 @@
-import type { TextStreamPart, StreamTextTransform } from 'ai';
-import type { ToolSet } from 'ai';
+import type { TextStreamPart, StreamTextTransform, ToolSet } from 'ai';
 
 /**
  * 创建一个 TransformStream，用于将流中的 LaTeX 公式标记标准化

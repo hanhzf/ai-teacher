@@ -52,9 +52,9 @@ export const qwenModel: LanguageModelV1 = {
         model: QWEN_MODEL_ID,
         messages: messages,
         stream: false,
-        temperature: options.settings?.temperature ?? 0.7,
-        max_tokens: options.settings?.maxTokens ?? 16384,
-        top_p: options.settings?.topP ?? 0.8,
+        temperature: 0.7,
+        max_tokens: 16384,
+        top_p: 0.8,
       };
       
       console.log(`[Qwen] Request Body: ${JSON.stringify(requestBody, null, 2)}`);
@@ -144,9 +144,9 @@ export const qwenModel: LanguageModelV1 = {
             model: QWEN_MODEL_ID,
             messages: messages,
             stream: true,
-            temperature: options.settings?.temperature ?? 0.7,
-            max_tokens: options.settings?.maxTokens ?? 16384,
-            top_p: options.settings?.topP ?? 0.8,
+            temperature: 0.7,
+            max_tokens: 16384,
+            top_p: 0.8,
           };
           
           console.log(`[Qwen] Stream Request Body: ${JSON.stringify(requestBody, null, 2)}`);

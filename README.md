@@ -95,6 +95,11 @@ npx pm2 delete ai-teacher
 npx pm2 save
 npx pm2 startup
 # Follow the command output to enable the system service (it will give you a command to run like 'sudo env PATH=... pm2 startup systemd -u ...')
+
+# 6. 测试千问模型
+pnpm run test:qwen
+npx pm2 logs ai-teacher --lines 100 (view specific app logs with history)
+
 ```
 
 ### Server Process "Killed" (OOM Fix)
