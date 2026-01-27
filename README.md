@@ -55,6 +55,7 @@ You will need to use the environment variables [defined in `.env.example`](.env.
 3. Download your environment variables: `vercel env pull`
 
 ```bash
+pnpm config set registry https://registry.npmmirror.com
 pnpm install
 pnpm dev
 ```
@@ -68,6 +69,7 @@ Your app template should now be running on [localhost:3000](http://localhost:300
 To prevent the application from closing (e.g., getting "Killed" due to memory issues), we use PM2.
 
 ```bash
+pnpm config set registry https://registry.npmmirror.com
 # 1. Build the project
 pnpm build
 
@@ -102,6 +104,27 @@ npx pm2 logs ai-teacher --lines 100 (view specific app logs with history)
 
 ```
 
+### 启动 pg
+```
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: studyworks-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: zhu88jie
+      POSTGRES_DB: studyworks
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+```
 ### Server Process "Killed" (OOM Fix)
 
 If you see a `Killed` message, your server is running out of memory. This is common on small VPS instances.
